@@ -1,21 +1,14 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-
-publish {
-    userOrg = 'cjj'
-    groupId = 'com.cjj.httplogger'
-    artifactId = 'HttpLogger'
-    publishVersion = '1.0.1'
-    desc = '可以定位代码位置的OkHttpInterceptor'
-    website = 'https://github.com/chen303464880/HttpLogger'
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+    id 'signing'
 }
-
 android {
-    compileSdkVersion 28
+    compileSdkVersion 34
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -29,9 +22,84 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    android {
+        namespace = "io.github.sumuve"
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+        multipleVariants {
+            withSourcesJar()
+            withJavadocJar()
+            allVariants()
+        }
+    }
 }
 
 dependencies {
     compileOnly 'com.squareup.okhttp3:okhttp:3.9.0'
+}
+publishing {
+    publications {
+        release(MavenPublication) {
+
+            groupId "io.github.sumuve"
+            artifactId "HttpLogger"
+            version "1.0.2"
+            afterEvaluate {
+                from components.release
+            }
+            pom {
+                name = 'HttpLogger'
+                description = '可以定位代码位置的OkHttpInterceptor'
+                url = 'https://github.com/sumuve/HttpLogger'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'CJJ'
+                        name = 'CJJ'
+                        email = 'sumuve@qq.com'
+                    }
+                }
+
+                scm {
+                    connection = 'https://github.com/sumuve/HttpLogger.git'
+                    developerConnection = 'https://github.com/sumuve/HttpLogger.git'
+                    url = 'https://github.com/sumuve/HttpLogger'
+                }
+            }
+        }
+
+
+    }
+    repositories {
+        maven {
+            name = "release"
+            url "https://central.sonatype.com/api/v1/publisher/deployments/download/"
+            credentials(HttpHeaderCredentials)
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+        mavenCentral()
+        maven {
+            name = 'myrepo'
+            url = layout.buildDirectory.dir("repo")
+        }
+    }
+}
+
+
+// signing, this need key, secret, we put it into gradle.properties
+signing {
+    sign publishing.publications.release
 }

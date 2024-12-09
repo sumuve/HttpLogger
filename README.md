@@ -3,8 +3,8 @@
   ![Image text](img/http.gif)
 
 #### 使用Gradle构建时添加一下依赖即可:
-```javascript
-implementation 'com.cjj.httplogger:HttpLogger:1.0.1'
+```groovy
+implementation 'io.github.sumuve:HttpLogger:1.0.2'
 ```
 ##### 初始化
 ```java
@@ -103,12 +103,3 @@ I/TAG1: ║ 11	com.android.internal.os.Zygote$MethodAndArgsCaller.run(Zygote.jav
 I/TAG0: ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════
 ```
 在控制台输出的信息中找到需要的代码位置标记的偏移量即可。
-
- 
-
-
-----
-### 关于作者
-* Email： <303464880@qq.com>
-* QQ： 303464880
-* 有任何建议或者使用中遇到问题都可以给我发邮件, 也可以加我QQ
